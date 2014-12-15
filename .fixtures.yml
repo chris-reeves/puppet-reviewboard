@@ -1,0 +1,8 @@
+fixtures:
+  forge_modules:
+    stdlib: "puppetlabs/stdlib"
+    concat: "puppetlabs/concat"
+    apache: "puppetlabs/apache"
+    postgresql: "puppetlabs/postgresql"
+  symlinks:
+    reviewboard: "#{source_dir}"
