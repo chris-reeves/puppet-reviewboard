@@ -1,4 +1,5 @@
 fixtures:
+  # Fixtures should also be added to <module>/spec/spec_helper_acceptance.rb
   forge_modules:
     stdlib: "puppetlabs/stdlib"
     concat: "puppetlabs/concat"

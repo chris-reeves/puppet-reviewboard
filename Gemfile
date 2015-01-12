@@ -8,3 +8,6 @@ gem 'facter', '>= 1.7.0'
 
 # rspec-puppet generates deprecation warnings with rspec 3.x
 gem 'rspec', '< 3.0.0'
+
+gem 'beaker-rspec'
+gem 'pry'
