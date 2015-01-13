@@ -35,7 +35,7 @@ define reviewboard::provider::db (
   } elsif $reviewboard::dbprovider == 'none' {
     # No-op
   } else {
-    err("DB provider '${reviewboard::dbprovider}' not defined")
+    fail("DB provider '${reviewboard::dbprovider}' not defined")
   }
 
 }
