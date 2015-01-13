@@ -32,6 +32,7 @@ define reviewboard::site::install(
   $cache,
   $cacheinfo,
 ) {
+  include reviewboard
 
   $site = $name
 
@@ -57,7 +58,7 @@ define reviewboard::site::install(
   exec {"rb-site install ${name}":
     require => Class[reviewboard::package],
     command => "rb-site install ${site} ${argstr}",
-    path    => '/usr/bin',
+    path    => $reviewboard::_rbsitepath,
     creates => $site,
   }
 

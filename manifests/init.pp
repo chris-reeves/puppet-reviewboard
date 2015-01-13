@@ -29,8 +29,26 @@ class reviewboard (
   $webprovider = 'puppetlabs/apache',
   $webuser     = undef,
   $dbprovider  = 'puppetlabs/postgresql',
-  $dbtype      = 'postgresql'
-) {
+  $dbtype      = 'postgresql',
+  $rbsitepath  = undef,
+) inherits reviewboard::params {
+
+  #
+  # Parameter validation
+  #
+
+  if $rbsitepath != undef {
+    validate_absolute_path($rbsitepath)
+  }
+
+  #
+  # Set defaults
+  #
+
+  $_rbsitepath = $rbsitepath ? {
+    undef   => $reviewboard::params::rbsitepath,
+    default => $rbsitepath,
+  }
 
   include reviewboard::package
 
