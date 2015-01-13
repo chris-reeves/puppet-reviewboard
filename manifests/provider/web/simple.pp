@@ -28,7 +28,7 @@ define reviewboard::provider::web::simple (
 
   $site = $name
 
-  include reviewboard::provider::web::simplepackage
+  require reviewboard::provider::web::simplepackage
 
   # Install apache config file
   file {"/etc/httpd/conf.d/${vhost}.conf":
