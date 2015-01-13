@@ -65,6 +65,8 @@ describe 'reviewboard::site' do
 
   # reviewboard::provider::web
   context 'with the $webprovider parameter on the main module' do
+    let (:params) { $default_params }
+
     context 'set to "none"' do
       let (:pre_condition) { 'class { reviewboard: webprovider => "none" }' }
 
@@ -104,6 +106,8 @@ describe 'reviewboard::site' do
 
   # reviewboard::provider::db
   context 'with the $dbprovider parameter on the main module' do
+    let (:params) { $default_params }
+
     context 'set to "none"' do
       let (:pre_condition) { 'class { reviewboard: dbprovider => "none" }' }
 
