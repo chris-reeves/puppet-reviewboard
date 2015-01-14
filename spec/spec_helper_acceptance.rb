@@ -32,6 +32,7 @@ RSpec.configure do |c|
       on host, puppet('module','install','puppetlabs-concat'), { :acceptable_exit_codes => [0,1] }
       on host, puppet('module','install','puppetlabs-apache'), { :acceptable_exit_codes => [0,1] }
       on host, puppet('module','install','puppetlabs-postgresql'), { :acceptable_exit_codes => [0,1] }
+      on host, puppet('module','install','puppetlabs-mysql'), { :acceptable_exit_codes => [0,1] }
       # RHEL, etc. has an additional dependency
       on host, puppet('module','install','stahnma-epel'), { :acceptable_exit_codes => [0,1] }
 #      shell("/bin/touch #{default['puppetpath']}/hiera.yaml")

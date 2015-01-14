@@ -112,12 +112,21 @@ describe 'reviewboard::site' do
       let (:pre_condition) { 'class { reviewboard: dbprovider => "none" }' }
 
       it { should_not contain_reviewboard__provider__db__puppetlabspostgresql($default_site) }
+      it { should_not contain_reviewboard__provider__db__puppetlabsmysql($default_site) }
     end
 
     context 'set to "puppetlabs/postgresql"' do
       let (:pre_condition) { 'class { reviewboard: dbprovider => "puppetlabs/postgresql" }' }
 
       it { should contain_reviewboard__provider__db__puppetlabspostgresql($default_site) }
+      it { should_not contain_reviewboard__provider__db__puppetlabsmysql($default_site) }
+    end
+
+    context 'set to "puppetlabs/mysql"' do
+      let (:pre_condition) { 'class { reviewboard: dbprovider => "puppetlabs/mysql" }' }
+
+      it { should_not contain_reviewboard__provider__db__puppetlabspostgresql($default_site) }
+      it { should contain_reviewboard__provider__db__puppetlabsmysql($default_site) }
     end
 
     context 'set to "foo"' do
