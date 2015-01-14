@@ -121,6 +121,39 @@ describe 'reviewboard::site' do
 
       it { should contain_reviewboard__provider__db__puppetlabspostgresql($default_site) }
       it { should_not contain_reviewboard__provider__db__puppetlabsmysql($default_site) }
+
+      # reviewboard::provider::db::puppetlabspostgresql
+      context 'reviewboard::provider::db::puppetlabspostgresql' do
+        it 'should depend on postgresql::lib::python' do
+          should contain_reviewboard__provider__db__puppetlabspostgresql($default_site).that_requires('Class[Postgresql::Lib::Python]')
+        end
+
+        context 'with dbhost set to "localhost" and dbcreate "true"' do
+          let (:params) { $default_params.merge({ :dbhost => 'localhost', :dbcreate => true }) }
+
+          it { should contain_postgresql__server__db($default_dbname) }
+        end
+
+        context 'with dbhost set to "localhost" and dbcreate "false"' do
+          let (:params) { $default_params.merge({ :dbhost => 'localhost', :dbcreate => false }) }
+
+          it { should_not contain_postgresql__server__db($default_dbname) }
+        end
+
+        context 'with dbhost set to "foo" and dbcreate "true"' do
+          let (:params) { $default_params.merge({ :dbhost => 'foo', :dbcreate => true }) }
+
+          it 'should fail to compile the catalog' do
+            expect { should compile }.to raise_error(Puppet::Error, /Remote db hosts not implemented/)
+          end
+        end
+
+        context 'with dbhost set to "foo" and dbcreate "false"' do
+          let (:params) { $default_params.merge({ :dbhost => 'foo', :dbcreate => false }) }
+
+          it { should_not contain_postgresql__server__db($default_dbname) }
+        end
+      end
     end
 
     context 'set to "puppetlabs/mysql"' do
