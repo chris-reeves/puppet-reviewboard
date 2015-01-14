@@ -27,6 +27,7 @@ define reviewboard::site (
   $dbhost     = 'localhost',
   $dbuser     = 'reviewboard',
   $dbpass     = undef,
+  $dbcreate   = true,
   $admin      = 'admin',
   $adminpass  = undef,
   $adminemail = "${reviewboard::webuser}@${::fqdn}",
@@ -43,12 +44,15 @@ define reviewboard::site (
     fail('Admin password not set')
   }
 
+  validate_bool($dbcreate)
+
   # Create the database
   reviewboard::provider::db {$site:
-    dbuser => $dbuser,
-    dbpass => $dbpass,
-    dbname => $dbname,
-    dbhost => $dbhost,
+    dbuser   => $dbuser,
+    dbpass   => $dbpass,
+    dbname   => $dbname,
+    dbhost   => $dbhost,
+    dbcreate => $dbcreate,
   }
 
   case $location { # A trailing slash is required

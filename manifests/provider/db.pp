@@ -21,6 +21,7 @@ define reviewboard::provider::db (
   $dbhost,
   $dbuser,
   $dbpass,
+  $dbcreate,
 ) {
 
   $site = $name
@@ -34,10 +35,11 @@ define reviewboard::provider::db (
     }
   } elsif $reviewboard::dbprovider == 'puppetlabs/mysql' {
     reviewboard::provider::db::puppetlabsmysql {$site:
-      dbname => $dbname,
-      dbhost => $dbhost,
-      dbuser => $dbuser,
-      dbpass => $dbpass,
+      dbname   => $dbname,
+      dbhost   => $dbhost,
+      dbuser   => $dbuser,
+      dbpass   => $dbpass,
+      dbcreate => $dbcreate,
     }
   } elsif $reviewboard::dbprovider == 'none' {
     # No-op

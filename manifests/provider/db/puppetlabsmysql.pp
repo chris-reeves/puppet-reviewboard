@@ -21,11 +21,12 @@ define reviewboard::provider::db::puppetlabsmysql (
   $dbuser,
   $dbpass,
   $dbname,
-  $dbhost = 'localhost',
+  $dbhost,
+  $dbcreate,
 ) {
 
-  if $dbhost != 'localhost' {
-    err('Remote db hosts not implemented')
+  if $dbcreate and $dbhost != 'localhost' {
+    fail('Remote db hosts not implemented')
   }
 
   class { '::mysql::bindings':
@@ -33,14 +34,16 @@ define reviewboard::provider::db::puppetlabsmysql (
   }
   require ::mysql::bindings
 
-  class { '::mysql::server':
-    root_password    => $dbpass,
-  }
-
-  ::mysql::db { $dbname:
-    user     => $dbuser,
-    password => $dbpass,
-    host     => $dbhost,
+  if ($dbcreate) {
+    class { '::mysql::server':
+      root_password    => $dbpass,
+    }
+  
+    ::mysql::db { $dbname:
+      user     => $dbuser,
+      password => $dbpass,
+      host     => $dbhost,
+    }
   }
 
 }
