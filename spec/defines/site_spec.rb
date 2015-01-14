@@ -5,6 +5,7 @@ $default_params = {
                    :adminpass => 'password2',
                   }
 $default_site = '/var/www/reviewboard'
+$default_dbname = 'reviewboard'
 
 describe 'reviewboard::site' do
   let (:title) { $default_site }
@@ -38,7 +39,7 @@ describe 'reviewboard::site' do
 
     # reviewboard::site::install
     it 'should install the site' do
-      should contain_exec("rb-site install #{$default_site}").that_requires("Class[Reviewboard::Package]")
+      should contain_exec("rb-site install #{$default_site}").that_requires('Class[Reviewboard::Package]')
     end
   end
 
@@ -127,6 +128,43 @@ describe 'reviewboard::site' do
 
       it { should_not contain_reviewboard__provider__db__puppetlabspostgresql($default_site) }
       it { should contain_reviewboard__provider__db__puppetlabsmysql($default_site) }
+
+      # reviewboard::provider::db::puppetlabsmysql
+      context 'reviewboard::provider::db::puppetlabsmysql' do
+        it 'should depend on mysql::bindings' do
+          should contain_reviewboard__provider__db__puppetlabsmysql($default_site).that_requires('Class[Mysql::Bindings]')
+        end
+        it { should contain_mysql__bindings.with_python_enable('true') }
+
+        context 'with dbhost set to "localhost" and dbcreate "true"' do
+          let (:params) { $default_params.merge({ :dbhost => 'localhost', :dbcreate => true }) }
+
+          it { should contain_mysql__server.with_root_password($default_params[:dbpass]) }
+          it { should contain_mysql__db($default_dbname).with_password($default_params[:dbpass]) }
+        end
+
+        context 'with dbhost set to "localhost" and dbcreate "false"' do
+          let (:params) { $default_params.merge({ :dbhost => 'localhost', :dbcreate => false }) }
+
+          it { should_not contain_mysql__server }
+          it { should_not contain_mysql__db }
+        end
+
+        context 'with dbhost set to "foo" and dbcreate "true"' do
+          let (:params) { $default_params.merge({ :dbhost => 'foo', :dbcreate => true }) }
+
+          it 'should fail to compile the catalog' do
+            expect { should compile }.to raise_error(Puppet::Error, /Remote db hosts not implemented/)
+          end
+        end
+
+        context 'with dbhost set to "foo" and dbcreate "false"' do
+          let (:params) { $default_params.merge({ :dbhost => 'foo', :dbcreate => false }) }
+
+          it { should_not contain_mysql__server }
+          it { should_not contain_mysql__db }
+        end
+      end
     end
 
     context 'set to "foo"' do
