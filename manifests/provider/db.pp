@@ -28,10 +28,11 @@ define reviewboard::provider::db (
 
   if $reviewboard::dbprovider == 'puppetlabs/postgresql' {
     reviewboard::provider::db::puppetlabspostgresql {$site:
-      dbname => $dbname,
-      dbhost => $dbhost,
-      dbuser => $dbuser,
-      dbpass => $dbpass,
+      dbname   => $dbname,
+      dbhost   => $dbhost,
+      dbuser   => $dbuser,
+      dbpass   => $dbpass,
+      dbcreate => $dbcreate,
     }
   } elsif $reviewboard::dbprovider == 'puppetlabs/mysql' {
     reviewboard::provider::db::puppetlabsmysql {$site:

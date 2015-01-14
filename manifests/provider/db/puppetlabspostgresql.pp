@@ -21,18 +21,21 @@ define reviewboard::provider::db::puppetlabspostgresql (
   $dbuser,
   $dbpass,
   $dbname,
-  $dbhost = 'localhost',
+  $dbhost,
+  $dbcreate,
 ) {
 
   require postgresql::lib::python
 
-  if $dbhost != 'localhost' {
-    err('Remote db hosts not implemented')
+  if $dbcreate and $dbhost != 'localhost' {
+    fail('Remote db hosts not implemented')
   }
 
-  postgresql::server::db {$dbname:
-    user     => $dbuser,
-    password => postgresql_password($dbuser,$dbpass),
+  if $dbcreate {
+    postgresql::server::db {$dbname:
+      user     => $dbuser,
+      password => postgresql_password($dbuser,$dbpass),
+    }
   }
 
 }
