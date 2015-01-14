@@ -17,7 +17,7 @@
 #  limitations under the License.
 
 class reviewboard::package (
-  $version = undef,
+  $version,
 ) {
   
   $base_url = "http://downloads.reviewboard.org/releases/ReviewBoard"
