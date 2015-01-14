@@ -31,6 +31,7 @@ define reviewboard::provider::db::puppetlabsmysql (
   class { '::mysql::bindings':
     python_enable => true,
   }
+  require ::mysql::bindings
 
   class { '::mysql::server':
     root_password    => $dbpass,
