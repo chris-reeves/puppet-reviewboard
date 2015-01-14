@@ -147,7 +147,7 @@ describe 'reviewboard::site' do
           let (:params) { $default_params.merge({ :dbhost => 'localhost', :dbcreate => false }) }
 
           it { should_not contain_mysql__server }
-          it { should_not contain_mysql__db }
+          it { should_not contain_mysql__db($default_dbname) }
         end
 
         context 'with dbhost set to "foo" and dbcreate "true"' do
