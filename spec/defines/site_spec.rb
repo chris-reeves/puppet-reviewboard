@@ -4,6 +4,7 @@ $default_params = {
                    :dbpass => 'password1',
                    :adminpass => 'password2',
                   }
+$default_vhost = 'reviewboard.example.com'
 $default_site = '/var/www/reviewboard'
 $default_dbname = 'reviewboard'
 
@@ -82,9 +83,21 @@ describe 'reviewboard::site' do
       it { should_not contain_reviewboard__provider__web__puppetlabsapache($default_site) }
 
       # reviewboard::provider::web::simple
-      it { should contain_class('reviewboard::provider::web::simplepackage') }
-      it 'should install Reviewboard::Provider::Web::Simplepackage before Reviewboard::Provider::Web::Simple' do
-        should contain_reviewboard__provider__web__simple($default_site).that_requires('Class[Reviewboard::Provider::Web::Simplepackage]')
+      context 'and with ssl set to "false"' do
+        let (:params) { $default_params.merge({ :vhost => $default_vhost, :ssl => false }) }
+
+        it { should contain_class('reviewboard::provider::web::simplepackage') }
+        it 'should install Reviewboard::Provider::Web::Simplepackage before Reviewboard::Provider::Web::Simple' do
+          should contain_reviewboard__provider__web__simple($default_site).that_requires('Class[Reviewboard::Provider::Web::Simplepackage]')
+        end
+      end
+
+      context 'and with ssl set to "true"' do
+        let (:params) { $default_params.merge({ :vhost => $default_vhost, :ssl => true }) }
+
+        it 'should fail to compile the catalog' do
+          expect { should compile }.to raise_error(Puppet::Error, /Web provider .* does not support ssl/)
+        end
       end
     end
 
@@ -94,6 +107,19 @@ describe 'reviewboard::site' do
       it { should_not contain_reviewboard__provider__web__simple($default_site) }
       it { should contain_reviewboard__provider__web__puppetlabsapache($default_site) }
       it { should contain_class('apache') }
+
+      # reviewboard::provider::web::puppetlabsapache
+      context 'and with ssl set to "false"' do
+        let (:params) { $default_params.merge({ :vhost => $default_vhost, :ssl => false }) }
+
+        it { should contain_apache__vhost($default_vhost).with_port('80').with_ssl('false') }
+      end
+
+      context 'and with ssl set to "true"' do
+        let (:params) { $default_params.merge({ :vhost => $default_vhost, :ssl => true }) }
+
+        it { should contain_apache__vhost($default_vhost).with_port('443').with_ssl('true') }
+      end
     end
 
     context 'set to "foo"' do
