@@ -34,6 +34,7 @@ define reviewboard::site (
   $cache      = 'memcached',
   $cacheinfo  = 'localhost:11211',
   $webuser    = $reviewboard::webuser,
+  $ssl        = false,
 ) {
   include reviewboard
 
@@ -45,6 +46,7 @@ define reviewboard::site (
   }
 
   validate_bool($dbcreate)
+  validate_bool($ssl)
 
   # Create the database
   reviewboard::provider::db {$site:
@@ -82,6 +84,7 @@ define reviewboard::site (
     vhost    => $vhost,
     location => $location,
     webuser  => $webuser,
+    ssl      => $ssl,
     require  => Reviewboard::Site::Install[$site],
   }
 

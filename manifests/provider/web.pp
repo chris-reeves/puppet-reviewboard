@@ -21,11 +21,16 @@ define reviewboard::provider::web (
   $vhost,
   $location,
   $webuser,
+  $ssl,
 ) {
 
   $site = $name
 
   if $reviewboard::webprovider == 'simple' {
+    if $ssl {
+      fail("Web provider 'simple' does not support ssl")
+    }
+
     reviewboard::provider::web::simple {$site:
       vhost    => $vhost,
       location => $location,
@@ -39,6 +44,7 @@ define reviewboard::provider::web (
     reviewboard::provider::web::puppetlabsapache {$site:
       vhost    => $vhost,
       location => $location,
+      ssl      => $ssl,
     }
 
     $realwebuser = $apache::user

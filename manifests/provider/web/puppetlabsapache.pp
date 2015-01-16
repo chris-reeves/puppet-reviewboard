@@ -20,9 +20,15 @@
 define reviewboard::provider::web::puppetlabsapache (
   $vhost,
   $location,
+  $ssl,
 ) {
 
   $site = $name
+
+  $port = $ssl ? {
+    true  => 443,
+    false => 80,
+  }
 
   include apache::mod::wsgi
   include apache::mod::mime
@@ -71,7 +77,8 @@ define reviewboard::provider::web::puppetlabsapache (
   ]
 
   apache::vhost {$vhost:
-    port                => 80,
+    port                => $port,
+    ssl                 => $ssl,
     docroot             => "${site}/htdocs",
     error_documents     => $error_documents,
     wsgi_script_aliases => $script_aliases,
