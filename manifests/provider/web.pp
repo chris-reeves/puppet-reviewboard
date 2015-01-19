@@ -22,6 +22,9 @@ define reviewboard::provider::web (
   $location,
   $webuser,
   $ssl,
+  $sslkey,
+  $sslcrt,
+  $sslchain,
 ) {
 
   $site = $name
@@ -45,6 +48,9 @@ define reviewboard::provider::web (
       vhost    => $vhost,
       location => $location,
       ssl      => $ssl,
+      sslkey   => $sslkey,
+      sslcrt   => $sslcrt,
+      sslchain => $sslchain,
     }
 
     $realwebuser = $apache::user

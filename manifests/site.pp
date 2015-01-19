@@ -35,6 +35,9 @@ define reviewboard::site (
   $cacheinfo  = 'localhost:11211',
   $webuser    = $reviewboard::webuser,
   $ssl        = false,
+  $sslkey     = undef,
+  $sslcrt     = undef,
+  $sslchain   = undef,
 ) {
   include reviewboard
 
@@ -47,6 +50,18 @@ define reviewboard::site (
 
   validate_bool($dbcreate)
   validate_bool($ssl)
+
+  if $sslkey != undef {
+    validate_absolute_path($sslkey)
+  }
+
+  if $sslcrt != undef {
+    validate_absolute_path($sslcrt)
+  }
+
+  if $sslchain != undef {
+    validate_absolute_path($sslchain)
+  }
 
   # Create the database
   reviewboard::provider::db {$site:
@@ -85,6 +100,9 @@ define reviewboard::site (
     location => $location,
     webuser  => $webuser,
     ssl      => $ssl,
+    sslkey   => $sslkey,
+    sslcrt   => $sslcrt,
+    sslchain => $sslchain,
     require  => Reviewboard::Site::Install[$site],
   }
 
