@@ -115,10 +115,36 @@ describe 'reviewboard::site' do
         it { should contain_apache__vhost($default_vhost).with_port('80').with_ssl('false') }
       end
 
-      context 'and with ssl set to "true"' do
+      context 'and with ssl set to "true" and default certificates' do
         let (:params) { $default_params.merge({ :vhost => $default_vhost, :ssl => true }) }
 
         it { should contain_apache__vhost($default_vhost).with_port('443').with_ssl('true') }
+      end
+
+      context 'and with ssl set to "true" and relative certificate paths' do
+        let (:params) { $default_params.merge({ :vhost    => $default_vhost,
+                                                :ssl      => true,
+                                                :sslkey   => 'certs/example_server.key',
+                                                :sslcrt   => 'certs/example_server.crt',
+                                                :sslchain => 'certs/server_chain.pem',
+                                             }) }
+
+        it 'should fail to compile the catalog' do
+          expect { should compile }.to raise_error(Puppet::Error, /.* is not an absolute path/)
+        end
+      end
+
+      context 'and with ssl set to "true" and absolute certificate paths' do
+        let (:params) { $default_params.merge({ :vhost    => $default_vhost,
+                                                :ssl      => true,
+                                                :sslkey   => '/etc/ssl/certs/example_server.key',
+                                                :sslcrt   => '/etc/ssl/certs/example_server.crt',
+                                                :sslchain => '/etc/ssl/certs/server_chain.pem',
+                                             }) }
+
+        it 'should pass the specified certificates through to apache::vhost' do
+          should contain_apache__vhost($default_vhost).with_port('443').with_ssl('true').with_ssl_key('/etc/ssl/certs/example_server.key').with_ssl_cert('/etc/ssl/certs/example_server.crt').with_ssl_chain('/etc/ssl/certs/server_chain.pem')
+        end
       end
     end
 
