@@ -42,6 +42,7 @@ define reviewboard::site::install(
     "--site-root ${location}",
     "--db-type ${dbtype}",
     "--db-name ${dbname}",
+    "--db-host ${dbhost}",
     "--db-user ${dbuser}",
     "--db-pass ${dbpass}",
     "--cache-type ${cache}",
