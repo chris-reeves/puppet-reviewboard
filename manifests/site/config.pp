@@ -27,7 +27,7 @@ define reviewboard::site::config (
   exec {"rb-site ${site} set ${key}=${value}":
     command => "rb-site manage ${site} set-siteconfig -- --key '${key}' --value '${value}'",
     unless  => "rb-site manage ${site} get-siteconfig -- --key '${key}' | grep '^${value}$'",
-    path    => $reviewboard::_rbsitepath,
+    path    => ['/bin', '/usr/bin', $reviewboard::_rbsitepath],
     require => Class['reviewboard::package'],
     notify  => Reviewboard::Provider::Web[$site],
   }
