@@ -29,6 +29,7 @@ define reviewboard::site::install(
   $admin,
   $adminpass,
   $adminemail,
+  $company,
   $cache,
   $cacheinfo,
 ) {
@@ -38,20 +39,21 @@ define reviewboard::site::install(
 
   $args = [
     '--noinput',
-    "--domain-name ${vhost}",
-    "--site-root ${location}",
-    "--db-type ${dbtype}",
-    "--db-name ${dbname}",
-    "--db-host ${dbhost}",
-    "--db-user ${dbuser}",
-    "--db-pass ${dbpass}",
-    "--cache-type ${cache}",
-    "--cache-info ${cacheinfo}",
+    "--domain-name '${vhost}'",
+    "--site-root '${location}'",
+    "--db-type '${dbtype}'",
+    "--db-name '${dbname}'",
+    "--db-host '${dbhost}'",
+    "--db-user '${dbuser}'",
+    "--db-pass '${dbpass}'",
+    "--cache-type '${cache}'",
+    "--cache-info '${cacheinfo}'",
     '--web-server-type apache',
     '--python-loader wsgi',
-    "--admin-user ${admin}",
-    "--admin-pass ${adminpass}",
-    "--admin-email ${adminemail}",
+    "--admin-user '${admin}'",
+    "--admin-pass '${adminpass}'",
+    "--admin-email '${adminemail}i'",
+    "--company '${company}'",
   ]
 
   $argstr = join($args, ' ')

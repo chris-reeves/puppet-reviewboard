@@ -31,6 +31,7 @@ define reviewboard::site (
   $admin      = 'admin',
   $adminpass  = undef,
   $adminemail = "${reviewboard::webuser}@${::fqdn}",
+  $company    = '',
   $cache      = 'memcached',
   $cacheinfo  = 'localhost:11211',
   $webuser    = $reviewboard::webuser,
@@ -49,6 +50,7 @@ define reviewboard::site (
   }
 
   validate_bool($dbcreate)
+  validate_string($company)
   validate_bool($ssl)
 
   if $sslkey != undef {
@@ -89,6 +91,7 @@ define reviewboard::site (
     admin      => $admin,
     adminpass  => $adminpass,
     adminemail => $adminemail,
+    company    => $company,
     cache      => $cache,
     cacheinfo  => $cacheinfo,
     require    => Reviewboard::Provider::Db[$site],
