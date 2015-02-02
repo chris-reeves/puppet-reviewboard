@@ -19,26 +19,27 @@
 # Set up a reviewboard site
 
 define reviewboard::site (
-  $site       = $name,
-  $vhost      = $::fqdn,
-  $location   = '/reviewboard',
-  $dbtype     = 'postgresql',
-  $dbname     = 'reviewboard',
-  $dbhost     = 'localhost',
-  $dbuser     = 'reviewboard',
-  $dbpass     = undef,
-  $dbcreate   = true,
-  $admin      = 'admin',
-  $adminpass  = undef,
-  $adminemail = "${reviewboard::webuser}@${::fqdn}",
-  $company    = '',
-  $cache      = 'memcached',
-  $cacheinfo  = 'localhost:11211',
-  $webuser    = $reviewboard::webuser,
-  $ssl        = false,
-  $sslkey     = undef,
-  $sslcrt     = undef,
-  $sslchain   = undef,
+  $site              = $name,
+  $vhost             = $::fqdn,
+  $location          = '/reviewboard',
+  $dbtype            = 'postgresql',
+  $dbname            = 'reviewboard',
+  $dbhost            = 'localhost',
+  $dbuser            = 'reviewboard',
+  $dbpass            = undef,
+  $dbcreate          = true,
+  $admin             = 'admin',
+  $adminpass         = undef,
+  $adminemail        = "${reviewboard::webuser}@${::fqdn}",
+  $company           = '',
+  $cache             = 'memcached',
+  $cacheinfo         = 'localhost:11211',
+  $webuser           = $reviewboard::webuser,
+  $ssl               = false,
+  $ssl_key           = undef,
+  $ssl_crt           = undef,
+  $ssl_chain         = undef,
+  $ssl_redirect_http = false,
 ) {
   include reviewboard
 
@@ -53,17 +54,19 @@ define reviewboard::site (
   validate_string($company)
   validate_bool($ssl)
 
-  if $sslkey != undef {
-    validate_absolute_path($sslkey)
+  if $ssl_key != undef {
+    validate_absolute_path($ssl_key)
   }
 
-  if $sslcrt != undef {
-    validate_absolute_path($sslcrt)
+  if $ssl_crt != undef {
+    validate_absolute_path($ssl_crt)
   }
 
-  if $sslchain != undef {
-    validate_absolute_path($sslchain)
+  if $ssl_chain != undef {
+    validate_absolute_path($ssl_chain)
   }
+
+  validate_bool($ssl_redirect_http)
 
   # Create the database
   reviewboard::provider::db {$site:
@@ -99,14 +102,15 @@ define reviewboard::site (
 
   # Set up the web server
   reviewboard::provider::web {$site:
-    vhost    => $vhost,
-    location => $location,
-    webuser  => $webuser,
-    ssl      => $ssl,
-    sslkey   => $sslkey,
-    sslcrt   => $sslcrt,
-    sslchain => $sslchain,
-    require  => Reviewboard::Site::Install[$site],
+    vhost             => $vhost,
+    location          => $location,
+    webuser           => $webuser,
+    ssl               => $ssl,
+    ssl_key           => $ssl_key,
+    ssl_crt           => $ssl_crt,
+    ssl_chain         => $ssl_chain,
+    ssl_redirect_http => $ssl_redirect_http,
+    require           => Reviewboard::Site::Install[$site],
   }
 
 }

@@ -22,9 +22,10 @@ define reviewboard::provider::web (
   $location,
   $webuser,
   $ssl,
-  $sslkey,
-  $sslcrt,
-  $sslchain,
+  $ssl_key,
+  $ssl_crt,
+  $ssl_chain,
+  $ssl_redirect_http,
 ) {
 
   $site = $name
@@ -45,12 +46,13 @@ define reviewboard::provider::web (
   } elsif $reviewboard::webprovider == 'puppetlabs/apache' {
     include apache
     reviewboard::provider::web::puppetlabsapache {$site:
-      vhost    => $vhost,
-      location => $location,
-      ssl      => $ssl,
-      sslkey   => $sslkey,
-      sslcrt   => $sslcrt,
-      sslchain => $sslchain,
+      vhost             => $vhost,
+      location          => $location,
+      ssl               => $ssl,
+      ssl_key           => $ssl_key,
+      ssl_crt           => $ssl_crt,
+      ssl_chain         => $ssl_chain,
+      ssl_redirect_http => $ssl_redirect_http,
     }
 
     $realwebuser = $apache::user
