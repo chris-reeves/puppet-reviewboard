@@ -113,12 +113,14 @@ describe 'reviewboard::site' do
         let (:params) { $default_params.merge({ :vhost => $default_vhost, :ssl => false }) }
 
         it { should contain_apache__vhost($default_vhost).with_port('80').with_ssl('false') }
+        it { should_not contain_apache__vhost("#{$default_vhost} ssl-redirect") }
       end
 
       context 'and with ssl set to "true" and default certificates' do
         let (:params) { $default_params.merge({ :vhost => $default_vhost, :ssl => true }) }
 
         it { should contain_apache__vhost($default_vhost).with_port('443').with_ssl('true') }
+        it { should_not contain_apache__vhost("#{$default_vhost} ssl-redirect") }
       end
 
       context 'and with ssl set to "true" and relative certificate paths' do
@@ -145,6 +147,14 @@ describe 'reviewboard::site' do
         it 'should pass the specified certificates through to apache::vhost' do
           should contain_apache__vhost($default_vhost).with_port('443').with_ssl('true').with_ssl_key('/etc/ssl/certs/example_server.key').with_ssl_cert('/etc/ssl/certs/example_server.crt').with_ssl_chain('/etc/ssl/certs/server_chain.pem')
         end
+        it { should_not contain_apache__vhost("#{$default_vhost} ssl-redirect") }
+      end
+
+      context 'and with ssl set to "true" and ssl_redirect_http set to "true"' do
+        let (:params) { $default_params.merge({ :vhost => $default_vhost, :ssl => true, :ssl_redirect_http => true }) }
+
+        it { should contain_apache__vhost($default_vhost).with_port('443').with_ssl('true') }
+        it { should contain_apache__vhost("#{$default_vhost} ssl-redirect").with_port('80').with_ssl('false').with_redirect_dest("https://#{$default_vhost}/") }
       end
     end
 
