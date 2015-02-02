@@ -21,9 +21,9 @@ define reviewboard::provider::web::puppetlabsapache (
   $vhost,
   $location,
   $ssl,
-  $sslkey,
-  $sslcrt,
-  $sslchain,
+  $ssl_key,
+  $ssl_crt,
+  $ssl_chain,
 ) {
 
   $site = $name
@@ -82,9 +82,9 @@ define reviewboard::provider::web::puppetlabsapache (
   apache::vhost {$vhost:
     port                => $port,
     ssl                 => $ssl,
-    ssl_key             => $sslkey,
-    ssl_cert            => $sslcrt,
-    ssl_chain           => $sslchain,
+    ssl_key             => $ssl_key,
+    ssl_cert            => $ssl_crt,
+    ssl_chain           => $ssl_chain,
     docroot             => "${site}/htdocs",
     error_documents     => $error_documents,
     wsgi_script_aliases => $script_aliases,

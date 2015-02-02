@@ -122,11 +122,11 @@ describe 'reviewboard::site' do
       end
 
       context 'and with ssl set to "true" and relative certificate paths' do
-        let (:params) { $default_params.merge({ :vhost    => $default_vhost,
-                                                :ssl      => true,
-                                                :sslkey   => 'certs/example_server.key',
-                                                :sslcrt   => 'certs/example_server.crt',
-                                                :sslchain => 'certs/server_chain.pem',
+        let (:params) { $default_params.merge({ :vhost     => $default_vhost,
+                                                :ssl       => true,
+                                                :ssl_key   => 'certs/example_server.key',
+                                                :ssl_crt   => 'certs/example_server.crt',
+                                                :ssl_chain => 'certs/server_chain.pem',
                                              }) }
 
         it 'should fail to compile the catalog' do
@@ -135,11 +135,11 @@ describe 'reviewboard::site' do
       end
 
       context 'and with ssl set to "true" and absolute certificate paths' do
-        let (:params) { $default_params.merge({ :vhost    => $default_vhost,
-                                                :ssl      => true,
-                                                :sslkey   => '/etc/ssl/certs/example_server.key',
-                                                :sslcrt   => '/etc/ssl/certs/example_server.crt',
-                                                :sslchain => '/etc/ssl/certs/server_chain.pem',
+        let (:params) { $default_params.merge({ :vhost     => $default_vhost,
+                                                :ssl       => true,
+                                                :ssl_key   => '/etc/ssl/certs/example_server.key',
+                                                :ssl_crt   => '/etc/ssl/certs/example_server.crt',
+                                                :ssl_chain => '/etc/ssl/certs/server_chain.pem',
                                              }) }
 
         it 'should pass the specified certificates through to apache::vhost' do
