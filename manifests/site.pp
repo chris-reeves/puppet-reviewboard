@@ -16,7 +16,118 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# Set up a reviewboard site
+# Set up an instance of a Reviewboard site
+#
+# === Parameters
+#
+# [*site*]
+#   Filesystem path into which this instance will be installed.
+#   Defaults to the name of the declared Reviewboard::Site resource.
+#
+# [*vhost*]
+#   Fully-qualified host name through which this instance will be accessed
+#   Defaults to $fqdn
+#
+# [*location*]
+#   URL path to this instance, relative to the host name
+#   Defaults to '/reviewboard'
+#
+# [*dbtype*]
+#   Type of database to be used. Valid values are 'postgresql' and 'mysql'.
+#   Defaults to 'postgresql'
+#
+# [*dbname*]
+#   Name of the Reviewboard database.
+#   Defaults to 'reviewboard'
+#
+# [*dbhost*]
+#   Hostname of the server hosting the Reviewboard database.
+#   Defaults to 'localhost'
+#
+# [*dbuser*]
+#   Name of the Reviewboard database user.
+#   Defaults to 'reviewboard'
+#
+# [*dbpass*]
+#   Password for the Reviewboard database user.
+#   Required parameter.
+#
+# [*admin*]
+#   Name of the Reviewboard admin user.
+#   Defaults to 'admin'
+#
+# [*adminpass*]
+#   Password for the Reviewboard admin user.
+#   Required parameter.
+#
+# [*adminemail*]
+#   Email address of the Reviewboard admin user.
+#   Defaults to $webuser@$fqdn
+#
+# [*company*]
+#   Company name (displayed by Reviewboard).
+#   Defaults to the empty string.
+#
+# [*cache*]
+#   Type of cache used by reviewboard. Valid values are 'memcached' and
+#   'file'.
+#   Defaults to 'memcached'
+#
+# [*cacheinfo*]
+#   Cache identifier (memcached connection string or file cache directory).
+#   Defaults to 'localhost:11211'
+#
+# [*webuser*]
+#   User that should own the web folders
+#
+# [*ssl*]
+#   Controls whether this instance is protected using SSL or not (boolean).
+#   Only supported by the puppetlabs/apache web provider.
+#   Defaults to false
+#
+# [*ssl_key*]
+#   Absolute path to the SSL certificate key file. This module is not
+#   responsible for placing the key file on the server. Only used when 'ssl'
+#   is true.
+#   Defaults to default system-generated certificate key.
+#
+# [*ssl_crt*]
+#   Absolute path to the SSL certificate file. This module is not responsible
+#   for placing the certificate file on the server. Only used when 'ssl' is
+#   true.
+#   Defaults to default system-generated certificate.
+#
+# [*ssl_chain*]
+#   Absolute path to the SSL certificate chain file. This module is not
+#   responsible for placing the certificate chain file on the server. Only
+#   used when 'ssl' is true.
+#   Defaults to undef.
+#
+# [*ssl_redirect_http*]
+#   Controls whether a redirect is configured to redirect any non-SSL traffic
+#   to the SSL-enabled host. Only used when 'ssl' is true.
+#   Defaults to false.
+#
+# === Examples
+#
+#   reviewboard::site {'/var/www/reviewboard':
+#     dbpass    => 'password1',
+#     adminpass => 'password2',
+#   }
+#
+#   reviewboard::site {'/var/www/reviewboard':
+#     vhost             => 'myhost.example.com',
+#     location          => '/'
+#     dbtype            => 'mysql',
+#     dbhost            => 'mysql.example.com',
+#     dbname            => 'rboard_db',
+#     dbuser            => 'rboard_user',
+#     dbpass            => 'password1',
+#     dbcreate          => false,
+#     adminpass         => 'password2',
+#     ssl               => true,
+#     ssl_redirect_http => true,
+#   }
 
 define reviewboard::site (
   $site              = $name,
@@ -43,15 +154,54 @@ define reviewboard::site (
 ) {
   include reviewboard
 
+  #
+  # Parameter validation
+  #
+
+  validate_absolute_path($site)
+
+  # TODO validate valid hostname
+  validate_string($vhost)
+
+  # XXX This will also allow Windows-style paths
+  validate_absolute_path($location)
+
+  validate_re($dbtype, [ '^postgresql$', '^mysql$' ],
+    "Invalid database type '${dbtype}' specified")
+
+  validate_string($dbname)
+
+  # TODO validate valid hostname
+  validate_string($dbhost)
+
+  validate_string($dbuser)
+
   if $dbpass == undef {
-    fail('Postgres DB password not set')
+    fail('Database password not set')
   }
+
+  validate_bool($dbcreate)
+
+  validate_string($admin)
+
   if $adminpass == undef {
     fail('Admin password not set')
   }
 
-  validate_bool($dbcreate)
+  # TODO validate email address
+  validate_string($adminemail)
+
   validate_string($company)
+
+  validate_re($cache, [ '^memcached$', '^file$' ],
+    "Invalid cache type '${cache}' specified")
+
+  if ($cache == 'file') {
+    validate_absolute_path($cacheinfo)
+  } else {
+    validate_string($cacheinfo)
+  }
+
   validate_bool($ssl)
 
   if $ssl_key != undef {
