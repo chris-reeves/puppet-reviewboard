@@ -18,6 +18,7 @@
 
 class reviewboard::package (
   $version,
+  $pkg_python_pip,
 ) {
 
   $base_url = 'http://downloads.reviewboard.org/releases/ReviewBoard'
@@ -32,8 +33,8 @@ class reviewboard::package (
   exec {'easy_install reviewboard':
     command => "easy_install '${egg_url}'",
     unless  => "pip freeze | grep 'ReviewBoard==${version}'",
-    path    => ['/bin','/usr/bin' ],
-    require => Package['python-pip'],
+    path    => [ '/bin','/usr/bin' ],
+    require => Package[$pkg_python_pip],
   }
 
 }

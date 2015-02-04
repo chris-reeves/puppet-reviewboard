@@ -16,12 +16,21 @@ class reviewboard::params {
   case $::osfamily {
     'Debian': {
       $rbsitepath = '/usr/local/bin'
+      $pkg_python_pip = 'python-pip'
+      $pkg_python_dev = 'python-dev'
+      $pkg_memcache = [ 'memcached', 'python-memcache' ]
     }
     'RedHat': {
       $rbsitepath = '/usr/bin'
+      $pkg_python_pip = 'python-pip'
+      $pkg_python_dev = 'python-devel'
+      $pkg_memcache = [ 'memcached', 'python-memcached' ]
     }
     default: {
       $rbsitepath = '/usr/bin'
+      $pkg_python_pip = undef
+      $pkg_python_dev = undef
+      $pkg_memcache = undef
     }
   }
 }

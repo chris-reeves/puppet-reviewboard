@@ -59,11 +59,15 @@
 #  }
 
 class reviewboard (
-  $version     = '1.7.28', # Current stable release
-  $webprovider = 'puppetlabs/apache',
-  $webuser     = undef,
-  $dbprovider  = 'puppetlabs/postgresql',
-  $rbsitepath  = undef,
+  $version        = '1.7.28', # Current stable release
+  $webprovider    = 'puppetlabs/apache',
+  $webuser        = undef,
+  $dbprovider     = 'puppetlabs/postgresql',
+  $dbtype         = 'postgresql',
+  $pkg_python_pip = undef,
+  $pkg_python_dev = undef,
+  $pkg_memcache   = undef,
+  $rbsitepath     = undef,
 ) inherits reviewboard::params {
 
   #
@@ -91,13 +95,25 @@ class reviewboard (
   # Set defaults
   #
 
+  $_pkg_python_pip = $pkg_python_pip ? {
+    undef   => $reviewboard::params::pkg_python_pip,
+    default => $pkg_python_pip,
+  }
+
+  $_pkg_python_dev = $pkg_python_dev ? {
+    undef   => $reviewboard::params::pkg_python_dev,
+    default => $pkg_python_dev,
+  }
+
+  $_pkg_memcache = $pkg_memcache ? {
+    undef   => $reviewboard::params::pkg_memcache,
+    default => $pkg_memcache,
+  }
+
   $_rbsitepath = $rbsitepath ? {
     undef   => $reviewboard::params::rbsitepath,
     default => $rbsitepath,
   }
 
-  class { 'reviewboard::package':
-    version => $version,
-  }
-
+  include reviewboard::install
 }
