@@ -59,10 +59,10 @@ define reviewboard::site::install(
   $argstr = join($args, ' ')
 
   exec {"rb-site install ${name}":
-    require => Class[reviewboard::package],
     command => "rb-site install ${site} ${argstr}",
-    path    => $reviewboard::_rbsitepath,
     creates => $site,
+    path    => $reviewboard::_rbsitepath,
+    require => Class[reviewboard::install],
   }
 
 }

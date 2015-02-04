@@ -40,7 +40,7 @@ describe 'reviewboard::site' do
 
     # reviewboard::site::install
     it 'should install the site' do
-      should contain_exec("rb-site install #{$default_site}").that_requires('Class[Reviewboard::Package]')
+      should contain_exec("rb-site install #{$default_site}").that_requires('Class[Reviewboard::Install]')
     end
   end
 

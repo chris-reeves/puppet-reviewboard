@@ -35,8 +35,11 @@ class reviewboard::install inherits reviewboard {
     ensure => installed,
   }
 
-  class { 'reviewboard::package':
-    version        => $reviewboard::version,
-    pkg_python_pip => $reviewboard::_pkg_python_pip,
+  # Install Reviewboard
+  exec {'install reviewboard':
+    command => "easy_install '${reviewboard::_egg_url}'",
+    unless  => "pip freeze | grep 'ReviewBoard==${reviewboard::version}'",
+    path    => [ '/bin','/usr/bin' ],
+    require => Package[$reviewboard::_pkg_python_pip],
   }
 }

@@ -38,6 +38,10 @@
 #   'puppetlabs/postgresql', 'puppetlabs/mysql' or 'none' for no config
 #   Defaults to 'puppetlabs/postgresql'
 #
+# [*egg_url*]
+#   URL of Reviewboard egg to install.
+#   Defaults to a URL built from the version parameter.
+#
 # [*rbsitepath*]
 #   Path to the rb-site binary.
 #   Default is OS-dependent.
@@ -64,6 +68,7 @@ class reviewboard (
   $webuser        = undef,
   $dbprovider     = 'puppetlabs/postgresql',
   $dbtype         = 'postgresql',
+  $egg_url        = undef,
   $pkg_python_pip = undef,
   $pkg_python_dev = undef,
   $pkg_memcache   = undef,
@@ -74,8 +79,7 @@ class reviewboard (
   # Parameter validation
   #
 
-  validate_re($version, [ '^1\.7\.', '^2\.0\.' ],
-    "Reviewboard module has not been tested with Reviewboard ${version}")
+  # Validation of $version is performed when $_egg_url is set
 
   # Validation of values is performed by reviewboard::provider::web
   validate_string($webprovider)
@@ -94,6 +98,23 @@ class reviewboard (
   #
   # Set defaults
   #
+
+  $egg_base_url = 'http://downloads.reviewboard.org/releases/ReviewBoard'
+  if $egg_url == undef {
+    case $version {
+      /^2\.0\./: {
+        $_egg_url = "${egg_base_url}/2.0/ReviewBoard-${version}-py2.6.egg"
+      }
+      /^1\.7\./: {
+        $_egg_url = "${egg_base_url}/1.7/ReviewBoard-${version}-py2.6.egg"
+      }
+      default: {
+        fail("Reviewboard module has not been tested with Reviewboard ${version}")
+      }
+    }
+  } else {
+    $_egg_url = $egg_url
+  }
 
   $_pkg_python_pip = $pkg_python_pip ? {
     undef   => $reviewboard::params::pkg_python_pip,
