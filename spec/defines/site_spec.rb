@@ -15,7 +15,7 @@ describe 'reviewboard::site' do
 
   context 'with no parameters' do
     it 'should fail to compile the catalog' do
-      expect { should compile }.to raise_error(Puppet::Error, /password not set/)
+      should raise_error(Puppet::Error, /password not set/)
     end
   end
 
@@ -96,7 +96,7 @@ describe 'reviewboard::site' do
         let (:params) { $default_params.merge({ :vhost => $default_vhost, :ssl => true }) }
 
         it 'should fail to compile the catalog' do
-          expect { should compile }.to raise_error(Puppet::Error, /Web provider .* does not support ssl/)
+          should raise_error(Puppet::Error, /Web provider .* does not support ssl/)
         end
       end
     end
@@ -132,7 +132,7 @@ describe 'reviewboard::site' do
                                              }) }
 
         it 'should fail to compile the catalog' do
-          expect { should compile }.to raise_error(Puppet::Error, /.* is not an absolute path/)
+          should raise_error(Puppet::Error, /is not an absolute path/)
         end
       end
 
@@ -162,7 +162,7 @@ describe 'reviewboard::site' do
       let (:pre_condition) { 'class { reviewboard: webprovider => "foo" }' }
 
       it 'should fail to compile the catalog' do
-        expect { should compile }.to raise_error(Puppet::Error, /Web provider .* not defined/)
+        should raise_error(Puppet::Error, /Web provider .* not defined/)
       end
     end
   end
@@ -206,7 +206,7 @@ describe 'reviewboard::site' do
           let (:params) { $default_params.merge({ :dbhost => 'foo', :dbcreate => true }) }
 
           it 'should fail to compile the catalog' do
-            expect { should compile }.to raise_error(Puppet::Error, /Remote db hosts not implemented/)
+            should raise_error(Puppet::Error, /Remote db hosts not implemented/)
           end
         end
 
@@ -249,7 +249,7 @@ describe 'reviewboard::site' do
           let (:params) { $default_params.merge({ :dbhost => 'foo', :dbcreate => true }) }
 
           it 'should fail to compile the catalog' do
-            expect { should compile }.to raise_error(Puppet::Error, /Remote db hosts not implemented/)
+            should raise_error(Puppet::Error, /Remote db hosts not implemented/)
           end
         end
 
@@ -266,7 +266,7 @@ describe 'reviewboard::site' do
       let (:pre_condition) { 'class { reviewboard: dbprovider => "foo" }' }
 
       it 'should fail to compile the catalog' do
-        expect { should compile }.to raise_error(Puppet::Error, /DB provider .* not defined/)
+        should raise_error(Puppet::Error, /DB provider .* not defined/)
       end
     end
   end

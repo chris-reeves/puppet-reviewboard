@@ -23,14 +23,12 @@
 # webuser:     User that should own the web folders
 # dbprovider:  Package to use to configure the database, or 'none' for no
 #              config
-# dbtype:      Type of database to use
 
 class reviewboard (
   $version     = '1.7.28', # Current stable release
   $webprovider = 'puppetlabs/apache',
   $webuser     = undef,
   $dbprovider  = 'puppetlabs/postgresql',
-  $dbtype      = 'postgresql',
   $rbsitepath  = undef,
 ) inherits reviewboard::params {
 
