@@ -32,6 +32,8 @@ define reviewboard::provider::db::puppetlabspostgresql (
   }
 
   if $dbcreate {
+    include postgresql::server
+
     postgresql::server::db {$dbname:
       user     => $dbuser,
       password => postgresql_password($dbuser,$dbpass),
