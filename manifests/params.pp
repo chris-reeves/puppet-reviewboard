@@ -27,10 +27,7 @@ class reviewboard::params {
       $pkg_memcache = [ 'memcached', 'python-memcached' ]
     }
     default: {
-      $rbsitepath = '/usr/bin'
-      $pkg_python_pip = undef
-      $pkg_python_dev = undef
-      $pkg_memcache = undef
+      fail("Reviewboard module has not been tested on OS ${::osfamily}")
     }
   }
 }
