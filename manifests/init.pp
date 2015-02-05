@@ -38,6 +38,12 @@
 #   'puppetlabs/postgresql', 'puppetlabs/mysql' or 'none' for no config
 #   Defaults to 'puppetlabs/postgresql'
 #
+# [*install_vcs*]
+#   List of version control systems to support (string, or array of strings).
+#   Valid values are 'cvs', 'svn', 'git', 'mercurial' and 'other'. If 'other'
+#   is specified, then the pkg_vcs_other parameter must be specified.
+#   Defaults to 'git'
+#
 # [*egg_url*]
 #   URL of Reviewboard egg to install.
 #   Defaults to a URL built from the version parameter.
@@ -55,6 +61,27 @@
 #   Package or (array of) packages to install for memcached support. Set to
 #   the string 'NONE' if memcached support should not be installed.
 #   Default is OS-dependent.
+#
+# [*pkg_vcs_cvs*]
+#   Package or (array of) packages to install for CVS support.
+#   Default is OS-dependent.
+#
+# [*pkg_vcs_svn*]
+#   Package or (array of) packages to install for SVN support.
+#   Default is OS-dependent.
+#
+# [*pkg_vcs_git*]
+#   Package or (array of) packages to install for git support.
+#   Default is OS-dependent.
+#
+# [*pkg_vcs_mercurial*]
+#   Package or (array of) packages to install for mercurial support.
+#   Default is OS-dependent.
+#
+# [*pkg_vcs_other*]
+#   Package or (array of) packages to install to support other version control
+#   systems.
+#   Required parameter when 'other' is specified for install_vcs.
 #
 # [*rbsitepath*]
 #   Path to the rb-site binary.
@@ -77,15 +104,21 @@
 #  }
 
 class reviewboard (
-  $version        = '1.7.28', # Current stable release
-  $webprovider    = 'puppetlabs/apache',
-  $webuser        = undef,
-  $dbprovider     = 'puppetlabs/postgresql',
-  $egg_url        = undef,
-  $pkg_python_pip = undef,
-  $pkg_python_dev = undef,
-  $pkg_memcached  = undef,
-  $rbsitepath     = undef,
+  $version           = '1.7.28', # Current stable release
+  $webprovider       = 'puppetlabs/apache',
+  $webuser           = undef,
+  $dbprovider        = 'puppetlabs/postgresql',
+  $install_vcs       = 'git',
+  $egg_url           = undef,
+  $pkg_python_pip    = undef,
+  $pkg_python_dev    = undef,
+  $pkg_memcached     = undef,
+  $pkg_vcs_cvs       = undef,
+  $pkg_vcs_svn       = undef,
+  $pkg_vcs_git       = undef,
+  $pkg_vcs_mercurial = undef,
+  $pkg_vcs_other     = undef,
+  $rbsitepath        = undef,
 ) inherits reviewboard::params {
 
   #
@@ -106,6 +139,16 @@ class reviewboard (
 
   if $rbsitepath != undef {
     validate_absolute_path($rbsitepath)
+  }
+
+  $_install_vcs = any2array($install_vcs)
+  $install_vcs_rejects = difference($_install_vcs, [ 'cvs', 'svn', 'git', 'mercurial', 'other' ])
+  if (count($install_vcs_rejects) > 0) {
+    fail("Unknown VCS specified: ${install_vcs_rejects}")
+  }
+
+  if member($_install_vcs, 'other') and $pkg_vcs_other == undef {
+    fail("Must specify packages to install (pkg_vcs_other) when installing 'other' VCS")
   }
 
   #
@@ -143,6 +186,26 @@ class reviewboard (
     undef   => $reviewboard::params::pkg_memcached,
     'NONE'  => undef,
     default => $pkg_memcached,
+  }
+
+  $_pkg_vcs_cvs = $pkg_vcs_cvs ? {
+    undef   => $reviewboard::params::pkg_vcs_cvs,
+    default => $pkg_vcs_cvs,
+  }
+
+  $_pkg_vcs_svn = $pkg_vcs_svn ? {
+    undef   => $reviewboard::params::pkg_vcs_svn,
+    default => $pkg_vcs_svn,
+  }
+
+  $_pkg_vcs_git = $pkg_vcs_git ? {
+    undef   => $reviewboard::params::pkg_vcs_git,
+    default => $pkg_vcs_git,
+  }
+
+  $_pkg_vcs_mercurial = $pkg_vcs_mercurial ? {
+    undef   => $reviewboard::params::pkg_vcs_mercurial,
+    default => $pkg_vcs_mercurial,
   }
 
   $_rbsitepath = $rbsitepath ? {

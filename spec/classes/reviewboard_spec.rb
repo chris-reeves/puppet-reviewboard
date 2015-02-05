@@ -44,6 +44,51 @@ describe 'reviewboard' do
     end
   end
 
+  context 'with install_vcs' do
+    context 'left at the default' do
+      it { should contain_package('git') }
+      it { should_not contain_package('subversion') }
+      it { should_not contain_package('cvs') }
+    end
+
+    context 'set to an invalid string' do
+      let (:params) { { :install_vcs => 'foo' } }
+
+      it { should raise_error(Puppet::Error, /Unknown VCS specified:/) }
+    end
+
+    context 'set to a string' do
+      let (:params) { { :install_vcs => 'svn' } }
+
+      it { should contain_package('subversion') }
+    end
+
+    context 'set to an array' do
+      let (:params) { { :install_vcs => [ 'svn', 'cvs' ] } }
+
+      it { should contain_package('subversion') }
+      it { should contain_package('cvs') }
+    end
+
+    context 'set to other, with pkg_vcs_other not set' do
+      let (:params) { { :install_vcs => 'other' } }
+
+      it { should raise_error(Puppet::Error, /Must specify packages to install .* when installing 'other' VCS/) }
+    end
+
+    context 'set to an array including other, with pkg_vcs_other not set' do
+      let (:params) { { :install_vcs => [ 'svn', 'other' ] } }
+
+      it { should raise_error(Puppet::Error, /Must specify packages to install .* when installing 'other' VCS/) }
+    end
+
+    context 'set to other, with pkg_vcs_other set' do
+      let (:params) { { :install_vcs => 'other', :pkg_vcs_other => 'my-other-vcs' } }
+
+      it { should contain_package('my-other-vcs') }
+    end
+  end
+
   context 'with pkg_memcached' do
     context 'left at the default' do
       it { should contain_package('memcached') }
@@ -55,7 +100,7 @@ describe 'reviewboard' do
       it { should contain_package('my-memcached') }
     end
 
-    context 'set to an array' do
+    context 'set to a string' do
       let (:params) { { :pkg_memcached => [ 'my-memcached', 'my-python-memcached' ] } }
 
       it { should contain_package('my-memcached') }

@@ -19,12 +19,20 @@ class reviewboard::params {
       $pkg_python_pip = 'python-pip'
       $pkg_python_dev = 'python-dev'
       $pkg_memcached = [ 'memcached', 'python-memcache' ]
+      $pkg_vcs_cvs = 'cvs'
+      $pkg_vcs_svn = [ 'subversion', 'python-svn']
+      $pkg_vcs_git = 'git'
+      $pkg_vcs_mercurial = 'mercurial'
     }
     'RedHat': {
       $rbsitepath = '/usr/bin'
       $pkg_python_pip = 'python-pip'
       $pkg_python_dev = 'python-devel'
       $pkg_memcached = [ 'memcached', 'python-memcached' ]
+      $pkg_vcs_cvs = 'cvs'
+      $pkg_vcs_svn = [ 'subversion', 'pysvn']
+      $pkg_vcs_git = 'git'
+      $pkg_vcs_mercurial = 'mercurial'
     }
     default: {
       fail("Reviewboard module has not been tested on OS ${::osfamily}")
