@@ -14,7 +14,10 @@ describe 'reviewboard class' do
         }
       
         # Install Reviewboard
-        include reviewboard
+        class {'reviewboard':
+          # Test package installation for all supported VCS
+          install_vcs => ['cvs','svn','git','mercurial'],
+        }
       
         # Setup site
         reviewboard::site {'/var/www/reviewboard':
@@ -42,11 +45,6 @@ describe 'reviewboard class' do
         #include reviewboard::traclink
       
         #package {'patch':}
-
-        #package {'git':
-        #  ensure => present,
-        #  before => Class['Reviewboard::Traclink'],
-        #}
       EOS
 
       # Run it twice and test for idempotency
