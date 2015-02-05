@@ -18,14 +18,10 @@ class reviewboard::install inherits reviewboard {
   }
 
   # Install python pip installer
-  package { $reviewboard::_pkg_python_pip:
-    ensure => installed,
-  }
+  ensure_packages($reviewboard::_pkg_python_pip)
 
   # Install python dev libs
-  package { $reviewboard::_pkg_python_dev:
-    ensure => installed,
-  }
+  ensure_packages($reviewboard::_pkg_python_dev)
 
   # Configure dependencies for pip provider
   Package[$reviewboard::_pkg_python_pip, $reviewboard::_pkg_python_dev] -> Package<|provider==pip|>
@@ -40,9 +36,7 @@ class reviewboard::install inherits reviewboard {
 
   # Install memcached unless requested otherwise
   if ($reviewboard::_pkg_memcached != undef) {
-    package { $reviewboard::_pkg_memcached:
-      ensure => installed,
-    }
+    ensure_packages($reviewboard::_pkg_memcached)
   }
 
   # Install CVS support if requested
