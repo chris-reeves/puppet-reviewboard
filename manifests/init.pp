@@ -42,6 +42,20 @@
 #   URL of Reviewboard egg to install.
 #   Defaults to a URL built from the version parameter.
 #
+# [*pkg_python_pip*]
+#   Package or (array of) packages to install for pip and easy_install.
+#   Default is OS-dependent.
+#
+# [*pkg_python_dev*]
+#   Package or (array of) packages to install for python headers and static
+#   libs.
+#   Default is OS-dependent.
+#
+# [*pkg_memcache*]
+#   Package or (array of) packages to install for memcached support. Set to
+#   the string 'NONE' if memcached support should not be installed.
+#   Default is OS-dependent.
+#
 # [*rbsitepath*]
 #   Path to the rb-site binary.
 #   Default is OS-dependent.
