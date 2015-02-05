@@ -128,6 +128,7 @@ class reviewboard (
 
   $_pkg_memcache = $pkg_memcache ? {
     undef   => $reviewboard::params::pkg_memcache,
+    'NONE'  => undef,
     default => $pkg_memcache,
   }
 
