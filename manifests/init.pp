@@ -51,7 +51,7 @@
 #   libs.
 #   Default is OS-dependent.
 #
-# [*pkg_memcache*]
+# [*pkg_memcached*]
 #   Package or (array of) packages to install for memcached support. Set to
 #   the string 'NONE' if memcached support should not be installed.
 #   Default is OS-dependent.
@@ -85,7 +85,7 @@ class reviewboard (
   $egg_url        = undef,
   $pkg_python_pip = undef,
   $pkg_python_dev = undef,
-  $pkg_memcache   = undef,
+  $pkg_memcached  = undef,
   $rbsitepath     = undef,
 ) inherits reviewboard::params {
 
@@ -140,10 +140,10 @@ class reviewboard (
     default => $pkg_python_dev,
   }
 
-  $_pkg_memcache = $pkg_memcache ? {
-    undef   => $reviewboard::params::pkg_memcache,
+  $_pkg_memcached = $pkg_memcached ? {
+    undef   => $reviewboard::params::pkg_memcached,
     'NONE'  => undef,
-    default => $pkg_memcache,
+    default => $pkg_memcached,
   }
 
   $_rbsitepath = $rbsitepath ? {

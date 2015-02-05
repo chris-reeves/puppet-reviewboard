@@ -18,13 +18,13 @@ class reviewboard::params {
       $rbsitepath = '/usr/local/bin'
       $pkg_python_pip = 'python-pip'
       $pkg_python_dev = 'python-dev'
-      $pkg_memcache = [ 'memcached', 'python-memcache' ]
+      $pkg_memcached = [ 'memcached', 'python-memcache' ]
     }
     'RedHat': {
       $rbsitepath = '/usr/bin'
       $pkg_python_pip = 'python-pip'
       $pkg_python_dev = 'python-devel'
-      $pkg_memcache = [ 'memcached', 'python-memcached' ]
+      $pkg_memcached = [ 'memcached', 'python-memcached' ]
     }
     default: {
       fail("Reviewboard module has not been tested on OS ${::osfamily}")

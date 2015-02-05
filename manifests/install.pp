@@ -31,8 +31,8 @@ class reviewboard::install inherits reviewboard {
   Package[$reviewboard::_pkg_python_pip, $reviewboard::_pkg_python_dev] -> Package<|provider==pip|>
 
   # Install memcached unless requested otherwise
-  if ($reviewboard::_pkg_memcache != undef) {
-    package { $reviewboard::_pkg_memcache:
+  if ($reviewboard::_pkg_memcached != undef) {
+    package { $reviewboard::_pkg_memcached:
       ensure => installed,
     }
   }
