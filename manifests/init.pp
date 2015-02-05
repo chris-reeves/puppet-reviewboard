@@ -81,7 +81,6 @@ class reviewboard (
   $webprovider    = 'puppetlabs/apache',
   $webuser        = undef,
   $dbprovider     = 'puppetlabs/postgresql',
-  $dbtype         = 'postgresql',
   $egg_url        = undef,
   $pkg_python_pip = undef,
   $pkg_python_dev = undef,
