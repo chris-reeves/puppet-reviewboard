@@ -9,6 +9,6 @@
   "issues_url": null,
   "description": "Installs reviewboard (reviewboard.org), a web tool for doing code reviews. It\nmay optionally be integrated with Trac to connect code reviews with tickets.\n",
   "dependencies": [
-    {"name": "puppetlabs/stdlib", "version_requirement": ">=4.2.0" },
+    {"name": "puppetlabs/stdlib", "version_requirement": ">=4.2.0" }
   ]
 }
