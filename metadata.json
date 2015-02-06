@@ -1,6 +1,6 @@
 {
   "name": "saw-reviewboard",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "Scott Wales",
   "summary": "Install and control reviewboard",
   "license": "Apache v2.0",
